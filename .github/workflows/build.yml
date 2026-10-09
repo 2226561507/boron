@@ -1,0 +1,46 @@
+name: Build Boron
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 下载仓库源码
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. 安装 Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # 3. 安装 Nub
+      - name: Install Nub
+        run: npm install -g @nubjs/nub
+
+      # 4. 安装项目依赖
+      - name: Install dependencies
+        run: nub install
+
+      # 5. 编译项目，生成 dist
+      - name: Build
+        run: nub run build
+
+      # 6. 保存编译结果，供下载
+      - name: Upload dist
+        uses: actions/upload-artifact@v4
+        with:
+          name: boron-dist
+          path: dist/
+          if-no-files-found: error
+          retention-days: 7
