@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <!-- Deliberately not device-width: Boron has no mobile layout. Phones lay it
@@ -10,10 +10,10 @@
          ("terminal screenshot generator"), not with the tagline: nobody searches
          for "beautiful images of your terminal". Keep both in step with the
          static copy at the bottom of <body>. -->
-    <title>Boron — terminal screenshot generator. Paste ANSI output, export PNG or SVG</title>
+    <title>Boron — 终端截图生成器，粘贴 ANSI 输出并导出 PNG 或 SVG</title>
     <meta
       name="description"
-      content="Free online terminal screenshot generator. Paste real terminal output, keep its ANSI colors, edit it like a document, and export a PNG, SVG, JPEG or WebP."
+      content="免费的在线终端截图生成器。粘贴真实终端输出，保留 ANSI 颜色，像编辑文档一样修改，并导出 PNG、SVG、JPEG 或 WebP。"
     />
     <link rel="canonical" href="https://boron.sh/" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
@@ -28,11 +28,11 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://boron.sh/" />
     <meta property="og:site_name" content="Boron" />
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:title" content="Boron — terminal screenshot generator" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:title" content="Boron — 终端截图生成器" />
     <meta
       property="og:description"
-      content="Paste real terminal output, keep its ANSI colors, and export it as a PNG, SVG, JPEG or WebP."
+      content="粘贴真实终端输出，保留 ANSI 颜色，并导出为 PNG、SVG、JPEG 或 WebP。"
     />
     <meta property="og:image" content="https://boron.sh/og.png" />
     <meta property="og:image:type" content="image/png" />
@@ -41,10 +41,10 @@
     <meta property="og:image:alt" content="Boron spelled out in rainbow terminal cells, beside a terminal window showing a dev server starting with coloured output, underlined links and a green READY badge" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Boron — terminal screenshot generator" />
+    <meta name="twitter:title" content="Boron — 终端截图生成器" />
     <meta
       name="twitter:description"
-      content="Paste real terminal output, keep its ANSI colors, and export it as a PNG, SVG, JPEG or WebP."
+      content="粘贴真实终端输出，保留 ANSI 颜色，并导出为 PNG、SVG、JPEG 或 WebP。"
     />
     <meta name="twitter:image" content="https://boron.sh/og.png" />
     <meta name="twitter:image:alt" content="Boron spelled out in rainbow terminal cells, beside a terminal window showing a dev server starting with coloured output, underlined links and a green READY badge" />
@@ -96,17 +96,14 @@
          which terminals copy their colors, the questions — is about.html. -->
     <section class="about prose" aria-labelledby="about-title">
       <div class="prose__inner">
-        <h1 id="about-title">Boron is a terminal screenshot generator</h1>
+        <h1 id="about-title">Boron 是一款终端截图生成器</h1>
         <p>
-          Paste real terminal output, or type it, and Boron keeps the ANSI colors, lets you edit the result like a
-          document, and exports it as a PNG, SVG, JPEG or WebP. It runs in the browser and it is free. There is no
-          upload: parsing and rendering happen on your machine.
+          粘贴真实的终端输出，或直接输入内容，Boron 会保留 ANSI 颜色，让你像编辑文档一样修改内容，并导出为 PNG、SVG、JPEG 或 WebP 图片。
+          它免费运行于浏览器中，不会上传你的内容：解析和渲染都在本机完成。
         </p>
         <p>
-          Everything Boron draws can exist in a real terminal. The palette is chalk's sixteen colors, the modifiers are
-          chalk's modifiers, and the automatic styling is expressed as chalk marks rather than hand-picked hex, so the
-          picture you compose and the escape sequence you copy out are the same thing. Mock up what you want a program to
-          print, then hand the ANSI or the chalk snippet to whoever is writing it.
+          Boron 绘制的所有内容都可以由真实终端的转义序列表达。颜色使用 Chalk 的 16 色调色板，样式也使用对应的 Chalk 修饰符，
+          因此你制作的图片与复制出来的转义序列是一致的。你可以先设计程序输出的效果，再把 ANSI 或 Chalk 代码交给开发者。
         </p>
         <p>
           <a href="/about">More about Boron</a>: what it does, how to copy colored output out of each terminal, and the

@@ -2,6 +2,7 @@ import { colorToCss } from "../core/style.ts";
 import type { Theme } from "../core/themes.ts";
 import { MODIFIER_KEYS, NAMED_COLORS, type Color, type ModifierKey, type NamedColor } from "../core/types.ts";
 import { useFormatting } from "../editor/useFormatting.ts";
+import { useI18n } from "../i18n.tsx";
 
 /**
  * Every control is exactly one SGR code — that correspondence is the only
@@ -72,6 +73,7 @@ interface SwatchRowProps {
 }
 
 function SwatchRow({ label, markKey, active, theme, onPick }: SwatchRowProps) {
+  const { t } = useI18n();
   const background = markKey === "bg";
   return (
     <div className="swatch-row">
@@ -85,8 +87,8 @@ function SwatchRow({ label, markKey, active, theme, onPick }: SwatchRowProps) {
               type="button"
               className={`swatch${active === name ? " swatch--active" : ""}`}
               style={{ background: colorToCss(name, theme) }}
-              title={`${COLOR_LABELS[name]} — chalk.${chalkName} · SGR ${sgrFor(index, background)}`}
-              aria-label={`${label}: ${COLOR_LABELS[name]}`}
+              title={`${t(COLOR_LABELS[name])} — chalk.${chalkName} · SGR ${sgrFor(index, background)}`}
+              aria-label={`${label}: ${t(COLOR_LABELS[name])}`}
               aria-pressed={active === name}
               onClick={() => onPick(name)}
             />
@@ -95,8 +97,8 @@ function SwatchRow({ label, markKey, active, theme, onPick }: SwatchRowProps) {
         <button
           type="button"
           className={`swatch swatch--clear${active === undefined ? " swatch--active" : ""}`}
-          title={`Default ${label.toLowerCase()} — SGR ${background ? 49 : 39}`}
-          aria-label={`Default ${label.toLowerCase()}`}
+          title={`${t("Default")} ${label.toLowerCase()} — SGR ${background ? 49 : 39}`}
+          aria-label={`${t("Default")} ${label.toLowerCase()}`}
           onClick={() => onPick(null)}
         >
           ⁄
@@ -107,27 +109,28 @@ function SwatchRow({ label, markKey, active, theme, onPick }: SwatchRowProps) {
 }
 
 export function Toolbar({ theme }: { theme: Theme }) {
+  const { t } = useI18n();
   // Bound to whichever selection is live — a run of text, or a rectangle.
   const { marks, setColor, toggleModifier } = useFormatting();
 
   return (
-    <div className="toolbar" role="toolbar" aria-label="Text formatting">
+    <div className="toolbar" role="toolbar" aria-label={t("Text formatting")}>
       <SwatchRow
-        label="Text"
+        label={t("Text")}
         markKey="fg"
         active={marks.fg}
         theme={theme}
         onPick={(color) => setColor("fg", color)}
       />
       <SwatchRow
-        label="Fill"
+        label={t("Fill")}
         markKey="bg"
         active={marks.bg}
         theme={theme}
         onPick={(color) => setColor("bg", color)}
       />
       <div className="swatch-row">
-        <span className="swatch-row__label">Style</span>
+        <span className="swatch-row__label">{t("Style")}</span>
         <div className="modifier-group">
           {MODIFIER_KEYS.map((key) => {
             const modifier = MODIFIERS[key];
@@ -140,7 +143,7 @@ export function Toolbar({ theme }: { theme: Theme }) {
                 aria-pressed={marks[key] === true}
                   onClick={() => toggleModifier(key)}
               >
-                <span className="chip__label">{modifier.label}</span>
+                <span className="chip__label">{t(modifier.label)}</span>
               </button>
             );
           })}

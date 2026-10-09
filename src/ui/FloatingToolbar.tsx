@@ -5,6 +5,7 @@ import { useEditorView } from "../editor/context.tsx";
 import { boxRect } from "../editor/box.ts";
 import { useBoxSelection } from "../editor/BoxSelection.tsx";
 import { Toolbar } from "./Toolbar.tsx";
+import { useI18n } from "../i18n.tsx";
 
 const GAP = 10;
 
@@ -23,6 +24,7 @@ interface Anchor {
  * still be measured while off-screen.
  */
 export function FloatingToolbar({ theme }: { theme: Theme }) {
+  const { t } = useI18n();
   const { view } = useEditorView();
   const { box, spans, measureGrid } = useBoxSelection();
   const ref = useRef<HTMLDivElement | null>(null);
@@ -126,7 +128,7 @@ export function FloatingToolbar({ theme }: { theme: Theme }) {
       ref={ref}
       className={`floating-toolbar${visible ? " floating-toolbar--visible" : ""}`}
       role="group"
-      aria-label="Formatting"
+      aria-label={t("Formatting")}
       /*
        * Keep focus in the editor for any press inside the bar — not just on the
        * buttons, which guarded themselves, but on the 5px between two swatches,

@@ -1,3 +1,4 @@
+import { useI18n } from "../i18n.tsx";
 function GitHubIcon() {
   return (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -8,10 +9,11 @@ function GitHubIcon() {
 
 /** Attribution, tucked into the corners of the canvas rather than a chrome bar. */
 export function Credit() {
+  const { t } = useI18n();
   return (
     <>
       <span className="credit credit--left">
-        Built by{" "}
+        {t("Built by")}{" "}
         <a className="credit__handle" href="https://x.com/colinhacks" target="_blank" rel="noreferrer">
           @colinhacks
         </a>

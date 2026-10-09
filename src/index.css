@@ -1168,3 +1168,7 @@ a.button {
   align-items: center;
   text-decoration: none;
 }
+
+
+/* Language switch: compact enough to sit beside the export controls. */
+.language-toggle { white-space: nowrap; font-size: 11px; padding-inline: 9px; }

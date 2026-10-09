@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8" />
     <!-- Same fixed width as the editor: the two pages should lay out alike. -->
     <meta name="viewport" content="width=900" />
 
-    <title>About Boron — a terminal screenshot generator that keeps ANSI colors</title>
+    <title>关于 Boron — 保留 ANSI 颜色的终端截图生成器</title>
     <meta
       name="description"
-      content="What Boron does, how to copy colored output out of iTerm2, Ghostty, VS Code, Windows Terminal and the rest, and how it differs from carbon.now.sh and ray.so."
+      content="了解 Boron 的功能、如何从不同终端复制彩色输出，以及它与其他代码截图工具的区别。"
     />
     <link rel="canonical" href="https://boron.sh/about" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
@@ -23,11 +23,11 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://boron.sh/about" />
     <meta property="og:site_name" content="Boron" />
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:title" content="About Boron — a terminal screenshot generator" />
+    <meta property="og:locale" content="zh_CN" />
+    <meta property="og:title" content="关于 Boron — 终端截图生成器" />
     <meta
       property="og:description"
-      content="What Boron does, how to copy colored output out of each terminal, and how it differs from code screenshot tools."
+      content="了解 Boron 的功能、如何从不同终端复制彩色输出，以及它与代码截图工具的区别。"
     />
     <meta property="og:image" content="https://boron.sh/og.png" />
     <meta property="og:image:type" content="image/png" />
@@ -36,10 +36,10 @@
     <meta property="og:image:alt" content="Boron spelled out in rainbow terminal cells, beside a terminal window showing a dev server starting with coloured output, underlined links and a green READY badge" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="About Boron — a terminal screenshot generator" />
+    <meta name="twitter:title" content="关于 Boron — 终端截图生成器" />
     <meta
       name="twitter:description"
-      content="What Boron does, how to copy colored output out of each terminal, and how it differs from code screenshot tools."
+      content="了解 Boron 的功能、如何从不同终端复制彩色输出，以及它与代码截图工具的区别。"
     />
     <meta name="twitter:image" content="https://boron.sh/og.png" />
     <meta name="twitter:image:alt" content="Boron spelled out in rainbow terminal cells, beside a terminal window showing a dev server starting with coloured output, underlined links and a green READY badge" />
@@ -62,7 +62,7 @@
         <img src="/mark.svg" width="16" height="22" alt="" />
         Boron
       </a>
-      <a class="page-header__open" href="/">Open the editor</a>
+      <a class="page-header__open" href="/">打开编辑器</a>
     </header>
 
     <!-- Plain HTML on purpose: no React, no JavaScript. Keep every claim here
@@ -70,17 +70,14 @@
          table mirrors wiki/clipboard-sources.md. -->
     <main class="page-main prose">
       <div class="prose__inner">
-        <h1>Boron is a terminal screenshot generator</h1>
+        <h1>Boron 是一款终端截图生成器</h1>
         <p>
-          Paste real terminal output, or type it, and Boron keeps the ANSI colors, lets you edit the result like a
-          document, and exports it as a PNG, SVG, JPEG or WebP. It runs in the browser and it is free. There is no
-          upload: parsing and rendering happen on your machine.
+          粘贴真实的终端输出，或直接输入内容，Boron 会保留 ANSI 颜色，让你像编辑文档一样修改内容，并导出为 PNG、SVG、JPEG 或 WebP 图片。
+          它免费运行于浏览器中，不会上传你的内容：解析和渲染都在本机完成。
         </p>
         <p>
-          Everything Boron draws can exist in a real terminal. The palette is chalk's sixteen colors, the modifiers are
-          chalk's modifiers, and the automatic styling is expressed as chalk marks rather than hand-picked hex, so the
-          picture you compose and the escape sequence you copy out are the same thing. Mock up what you want a program to
-          print, then hand the ANSI or the chalk snippet to whoever is writing it.
+          Boron 绘制的所有内容都可以由真实终端的转义序列表达。颜色使用 Chalk 的 16 色调色板，样式也使用对应的 Chalk 修饰符，
+          因此你制作的图片与复制出来的转义序列是一致的。你可以先设计程序输出的效果，再把 ANSI 或 Chalk 代码交给开发者。
         </p>
 
         <img
@@ -91,66 +88,57 @@
           alt="A terminal screenshot exported from Boron: a dev server starting, with a colored prompt, underlined links, a filled project name and a green READY badge"
         />
 
-        <h2>What it does</h2>
+        <h2>功能介绍</h2>
         <ul>
           <li>
-            <strong>Keeps the colors of pasted output.</strong> ANSI escape codes are parsed in full, including 256-color
-            and truecolor, and rich text is read from the clipboard of the terminals that write it.
+            <strong>保留粘贴内容的颜色。</strong> 会完整解析 ANSI 转义码，包括 256 色和真彩色；对于支持富文本复制的终端，也会读取剪贴板中的样式。
           </li>
           <li>
-            <strong>Edits like a document.</strong> Select any run and recolor it, or type your own. Colors are chalk's
-            sixteen names rather than hex values, so switching theme re-maps them.
+            <strong>像编辑文档一样修改。</strong> 选择任意文本片段即可重新着色，也可以直接输入内容。颜色使用 Chalk 的 16 个标准名称，而不是固定的十六进制值，因此切换主题时会自动映射。
           </li>
           <li>
-            <strong>Selects a rectangle, not a run.</strong> Terminal output is a grid, so the thing to restyle is often
-            vertical: one column of a table, the <code>tree</code> gutter, the timestamps down the left. Hold
+            <strong>选择矩形区域，而不只是文本片段。</strong> 终端输出是一个网格，因此经常需要修改纵向区域，例如表格的一列、<code>tree</code> 的缩进线或左侧时间戳。按住
             <kbd>Alt</kbd> (<kbd>⌥</kbd> on a Mac) and drag to select exactly those cells on every row.
           </li>
           <li>
-            <strong>Renders command lines bright and output dim.</strong> A line opening with <code>$</code>,
-            <code>❯</code>, a bare <code>&gt;</code> or oh-my-zsh's <code>➜</code> is treated as a command.
+            <strong>命令行高亮显示，输出内容淡化显示。</strong> 以 <code>$</code>、<code>❯</code>、单独的 <code>&gt;</code> 或 oh-my-zsh 的 <code>➜</code> 开头的行会被识别为命令。
           </li>
           <li>
-            <strong>Eight themes.</strong> Boron, VS Code Dark+, Dracula, Tokyo Night, Catppuccin Mocha, Nord, One Dark
-            and Solarized Dark, each with a matching set of backdrops.
+            <strong>八种主题。</strong> 包括 Boron、VS Code Dark+、Dracula、Tokyo Night、Catppuccin Mocha、Nord、One Dark 和 Solarized Dark，每种主题都配有相应背景。
           </li>
           <li>
-            <strong>Exports PNG, SVG, JPEG or WebP</strong>, or copies the image straight to the clipboard. The SVG embeds
-            the fonts it uses, so it renders the same everywhere.
+            <strong>导出 PNG、SVG、JPEG 或 WebP</strong>，也可以直接将图片复制到剪贴板。SVG 会嵌入所用字体，因此在不同设备上也能保持一致的显示效果。
           </li>
           <li>
-            <strong>Copies the text back out</strong> as raw ANSI, a runnable chalk snippet, or plain text.
+            <strong>复制文本内容</strong> ，格式可以是原始 ANSI、可运行的 Chalk 代码片段或纯文本。
           </li>
           <li>
-            <strong>Shares as a link.</strong> The whole document and its settings travel in the URL, so a link opens the
+            <strong>通过链接分享。</strong> The whole document and its settings travel in the URL, so a link opens the
             same picture for whoever receives it.
           </li>
         </ul>
 
-        <h2>How to take a terminal screenshot with the colors kept</h2>
+        <h2>如何保留颜色制作终端截图</h2>
         <ol>
           <li>
-            Copy the output in your terminal. Most terminals that write rich text do it on an ordinary copy; the table
-            below says which need a setting or a different shortcut. Any terminal can also put the raw escape codes on the
-            clipboard, for example <code>git log --color=always | pbcopy</code>.
+            在终端中复制输出。大多数支持富文本的终端使用普通复制即可；下表列出了需要开启设置或使用其他快捷键的终端。也可以将原始转义码复制到剪贴板，例如 <code>git log --color=always | pbcopy</code>.
           </li>
-          <li>Paste it into the <a href="/">editor</a>. Escape codes and rich text are both read, and the colors map onto the active theme.</li>
-          <li>Pick a theme and a backdrop, set the width in columns, and add a title bar if you want one.</li>
-          <li>Save it as an image, copy it to the clipboard, or copy a link to the document.</li>
+          <li>将内容粘贴到<a href="/">编辑器</a>中。程序会读取转义码或富文本，并将颜色映射到当前主题。</li>
+          <li>选择主题和背景，设置终端宽度（列数），还可以按需添加标题栏。</li>
+          <li>将其保存为图片、复制到剪贴板，或复制文档分享链接。</li>
         </ol>
 
-        <h2>Which terminals copy their colors</h2>
+        <h2>哪些终端可以复制颜色</h2>
         <p>
-          A terminal that copies rich text hands Boron the colors directly. One that copies plain text still works if the
-          escape codes are in the text, which is what piping a command through <code>pbcopy</code> or <code>xclip</code>
+          支持富文本复制的终端会直接把颜色交给 Boron。只复制纯文本的终端也能使用，只要文本中包含转义码；例如将命令输出通过 <code>pbcopy</code> or <code>xclip</code>
           gives you.
         </p>
         <table>
           <thead>
             <tr>
-              <th>Terminal</th>
-              <th>Colors on copy</th>
-              <th>How</th>
+              <th>终端</th>
+              <th>复制时保留颜色</th>
+              <th>操作方式</th>
             </tr>
           </thead>
           <tbody>
@@ -170,29 +158,27 @@
           </tbody>
         </table>
 
-        <h2>Questions</h2>
-        <h3>How is this different from carbon.now.sh or ray.so?</h3>
+        <h2>常见问题</h2>
+        <h3>它与 carbon.now.sh 或 ray.so 有什么区别？</h3>
         <p>
-          Those tools syntax-highlight source code by language. Boron reads the ANSI escape codes a program printed, so a
-          screenshot of a dev server, a test run or a colored <code>ls</code> looks the way the terminal showed it.
+          那些工具会根据编程语言为源代码添加语法高亮。Boron 读取的是程序实际输出的 ANSI 转义码，因此开发服务器启动、测试运行或彩色 <code>ls</code> 命令的截图，都能还原终端中的显示效果。
         </p>
-        <h3>Can I convert ANSI output to SVG?</h3>
+        <h3>可以将 ANSI 输出转换为 SVG 吗？</h3>
         <p>
-          Yes. Paste the output and save as SVG. The file embeds the font faces it uses and stays sharp at any size, which
-          suits a README or documentation.
+          可以。粘贴输出后选择保存为 SVG 即可。文件会嵌入所用字体，无论放大到什么尺寸都能保持清晰，适合用于 README 或技术文档。
         </p>
-        <h3>My terminal only copies plain text. Does it still work?</h3>
+        <h3>终端只能复制纯文本，还能使用吗？</h3>
         <p>
           Yes. Boron reads the escape codes themselves, so pipe a command's colored output to the clipboard and paste
           that. Terminals with no rich copy at all, such as Alacritty, WezTerm and tmux, still get the command-line
           highlighting.
         </p>
-        <h3>Does anything get uploaded?</h3>
+        <h3>内容会被上传吗？</h3>
         <p>
           No. There is no server; parsing and rendering happen in your browser. A share link carries the document in the
           URL itself.
         </p>
-        <h3>Is the source available?</h3>
+        <h3>源码是开源的吗？</h3>
         <p>
           Yes, at <a href="https://github.com/colinhacks/boron">github.com/colinhacks/boron</a>.
         </p>

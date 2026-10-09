@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useReducer, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { track } from "@vercel/analytics/react";
 import { documentToRenderLines, parsedLinesToDocument, type LineElement } from "./core/document.ts";
 import { parseAnsi } from "./core/ansi.ts";
@@ -45,6 +45,7 @@ import { Sidebar } from "./ui/Sidebar.tsx";
 import { SplitButton } from "./ui/SplitButton.tsx";
 import { FloatingToolbar } from "./ui/FloatingToolbar.tsx";
 import { sampleDocument } from "./ui/sample.ts";
+import { useI18n } from "./i18n.tsx";
 import { buildShareUrl, hasFragmentLink, readSharedWorkspace, trackingUrl } from "./share.ts";
 import {
   sanitizeBackgroundId,
@@ -139,16 +140,7 @@ const URL_SYNC_DELAY = 500;
  * that grows, too — the next trick worth telling anyone about is another entry
  * here, not a longer sentence.
  */
-const LEGEND: readonly { id: string; text: ReactNode }[] = [
-  {
-    id: "box-select",
-    text: (
-      <>
-        Hold <kbd>{ALT_LABEL}</kbd> and drag to select a rectangle
-      </>
-    ),
-  },
-];
+const LEGEND: readonly { id: string }[] = [{ id: "box-select" }];
 
 type CopyMode = "image" | "link" | "ansi" | "chalk" | "text";
 
@@ -171,6 +163,7 @@ export interface AppProps {
 }
 
 export function App({ shared }: AppProps = {}) {
+  const { language, setLanguage, t } = useI18n();
   const persisted = useMemo(() => (shared ? {} : loadPersisted()), [shared]);
   const [value, setValue] = useState<LineElement[]>(() => shared?.document ?? persisted.document ?? sampleDocument());
   const [themeId, setThemeId] = useState(() => shared?.themeId ?? persisted.themeId ?? DEFAULT_THEME.id);
@@ -362,22 +355,22 @@ export function App({ shared }: AppProps = {}) {
       // Counted after the work succeeds rather than on the click, so a failed
       // render or a blocked clipboard never reads as someone exporting.
       track("Export", { format });
-      flash(`Saved ${filename}`);
+      flash(t("Saved {filename}", { filename }));
     } catch (error) {
-      flash(error instanceof Error ? error.message : "Export failed");
+      flash(error instanceof Error ? error.message : t("Export failed"));
     }
-  }, [scene, format, flash]);
+  }, [scene, format, flash, t]);
 
   const handleCopyImage = useCallback(async () => {
     if (!scene) return;
     try {
       await copyImageToClipboard(scene);
       track("Copy image");
-      flash("Image copied");
+      flash(t("Image copied"));
     } catch {
-      flash("Clipboard blocked — use Save instead");
+      flash(t("Clipboard blocked — use Save instead"));
     }
-  }, [scene, flash]);
+  }, [scene, flash, t]);
 
   const copyAs = useCallback(
     async (kind: "ansi" | "text" | "chalk") => {
@@ -390,12 +383,12 @@ export function App({ shared }: AppProps = {}) {
       try {
         await copyText(serialized);
         track("Copy text", { kind });
-        flash(kind === "ansi" ? "ANSI copied" : kind === "text" ? "Text copied" : "chalk source copied");
+        flash(t(kind === "ansi" ? "ANSI copied" : kind === "text" ? "Text copied" : "chalk source copied"));
       } catch {
-        flash("Clipboard blocked");
+        flash(t("Clipboard blocked"));
       }
     },
-    [renderLines, flash],
+    [renderLines, flash, t],
   );
 
   /**
@@ -412,11 +405,11 @@ export function App({ shared }: AppProps = {}) {
     try {
       await copyText(await buildShareUrl(workspace, window.location.href));
       track("Copy link");
-      flash("Link copied");
+      flash(t("Link copied"));
     } catch {
-      flash("Clipboard blocked");
+      flash(t("Clipboard blocked"));
     }
-  }, [workspace, flash]);
+  }, [workspace, flash, t]);
 
   const handleCopy = useCallback(async () => {
     if (copyMode === "image") await handleCopyImage();
@@ -468,9 +461,9 @@ export function App({ shared }: AppProps = {}) {
     (choice: HighlightChoice, detected: LanguageId | null) => {
       setHighlight(choice);
       setDetectedLanguage(detected);
-      if (detected) flash(`Language detected: ${languageLabel(detected)}`);
+      if (detected) flash(t("Language detected: {language}", { language: languageLabel(detected) }));
     },
-    [flash],
+    [flash, t],
   );
 
   /** Reset means everything — the document and every setting around it. */
@@ -498,12 +491,12 @@ export function App({ shared }: AppProps = {}) {
       void readSharedWorkspace(window.location.href).then((next) => {
         if (!next) return;
         applyWorkspace(next);
-        flash("Opened a shared link");
+        flash(t("Opened a shared link"));
       });
     };
     window.addEventListener("hashchange", onHashChange);
     return () => window.removeEventListener("hashchange", onHashChange);
-  }, [applyWorkspace, flash]);
+  }, [applyWorkspace, flash, t]);
 
 
   // Dragging either edge of the block sets how many columns wide the terminal
@@ -570,23 +563,32 @@ export function App({ shared }: AppProps = {}) {
           {/* Set in the terminal face, like the OG card and the block itself —
               a tagline about terminal output should look like terminal output. */}
           <span className="brand__tagline" style={{ fontFamily: FONT_FAMILY }}>
-            gorgeous editable terminal screenshots
+            {t("gorgeous editable terminal screenshots")}
           </span>
         </div>
 
         <div className="export-bar">
+          <button
+            type="button"
+            className="button button--quiet language-toggle"
+            onClick={() => setLanguage(language === "zh-CN" ? "en" : "zh-CN")}
+            aria-label={language === "zh-CN" ? "Switch to English" : "切换到简体中文"}
+            title={language === "zh-CN" ? "Switch to English" : "切换到简体中文"}
+          >
+            {language === "zh-CN" ? "简体中文 / EN" : "EN / 简体中文"}
+          </button>
           <a className="button button--quiet" href="/about">
-            About
+            {t("About")}
           </a>
           <button type="button" className="button button--quiet" onClick={resetAll}>
-            Reset
+            {t("Reset")}
           </button>
 
           <SplitButton
-            label={`Copy ${COPY_MODES.find((candidate) => candidate.id === copyMode)!.label}`}
-            options={COPY_MODES.map((candidate) => ({ id: candidate.id, label: `Copy as ${candidate.label}` }))}
+            label={t(`Copy ${COPY_MODES.find((candidate) => candidate.id === copyMode)!.label}`)}
+            options={COPY_MODES.map((candidate) => ({ id: candidate.id, label: t(`Copy as ${candidate.label}`) }))}
             value={copyMode}
-            menuLabel="Choose what to copy"
+            menuLabel={t("Choose what to copy")}
             onSelect={(id) => setCopyMode(id as CopyMode)}
             onAction={handleCopy}
             disabled={copyMode === "image" && !scene}
@@ -594,10 +596,10 @@ export function App({ shared }: AppProps = {}) {
 
           <SplitButton
             primary
-            label={`Save ${IMAGE_FORMATS.find((candidate) => candidate.id === format)!.label}`}
-            options={IMAGE_FORMATS.map((candidate) => ({ id: candidate.id, label: `Save as ${candidate.label}` }))}
+            label={t(`Save ${IMAGE_FORMATS.find((candidate) => candidate.id === format)!.label}`)}
+            options={IMAGE_FORMATS.map((candidate) => ({ id: candidate.id, label: t(`Save as ${candidate.label}`) }))}
             value={format}
-            menuLabel="Choose an image format"
+            menuLabel={t("Choose an image format")}
             onSelect={(id) => setFormat(id as ImageFormat)}
             onAction={handleDownload}
             disabled={!scene}
@@ -709,7 +711,7 @@ export function App({ shared }: AppProps = {}) {
                       className={`resize-handle${dragging === side ? " resize-handle--dragging" : ""}`}
                       role="separator"
                       aria-orientation="vertical"
-                      aria-label="Drag to set the width in columns"
+                      aria-label={t("Drag to set the width in columns")}
                       style={{
                         left:
                           side === "left"
@@ -733,13 +735,15 @@ export function App({ shared }: AppProps = {}) {
                     that is as tall as the window. It is positioned out of flow,
                     which is what keeps it off the measurement above. */}
                 <ul className="stage__legend">
-                  {LEGEND.map(({ id, text }) => (
-                    <li key={id}>{text}</li>
+                  {LEGEND.map(({ id }) => (
+                    <li key={id}>
+                      {t("Hold")} <kbd>{ALT_LABEL}</kbd> {t("and drag to select a rectangle")}
+                    </li>
                   ))}
                 </ul>
                 </div>
               ) : (
-                <p className="stage__loading">Loading font…</p>
+                <p className="stage__loading">{t("Loading font…")}</p>
               )}
               </div>
             </div>

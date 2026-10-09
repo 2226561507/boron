@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { App } from "./App.tsx";
 import { readSharedWorkspace } from "./share.ts";
 import "./index.css";
+import { LanguageProvider } from "./i18n.tsx";
 
 const container = document.getElementById("root");
 if (!container) throw new Error("#root is missing from index.html");
@@ -21,7 +22,7 @@ readSharedWorkspace(window.location.href)
   .then((shared) => {
     createRoot(container).render(
       <StrictMode>
-        <App shared={shared} />
+        <LanguageProvider><App shared={shared} /></LanguageProvider>
         <Analytics />
       </StrictMode>,
     );

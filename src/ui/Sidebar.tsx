@@ -16,6 +16,7 @@ import {
   type Background,
 } from "../export/background.ts";
 import { themedBackground } from "../export/backdrop.ts";
+import { useI18n } from "../i18n.tsx";
 import {
   ASPECT_PRESETS,
   MAX_COLUMNS,
@@ -147,6 +148,7 @@ export function Sidebar({
   detectedLanguage,
   onHighlightChange,
 }: SidebarProps) {
+  const { language, t } = useI18n();
   const aspect = aspectById(frame.aspect);
   const fill = background && isFillId(background.id) ? background.id : null;
   // What the colour input opens on: whatever is behind the block right now, so
@@ -162,9 +164,9 @@ export function Sidebar({
     <aside className="sidebar">
       <section className="panel">
         <div className="panel__header">
-          <h2 className="panel__title">Title bar</h2>
+          <h2 className="panel__title">{t("Title bar")}</h2>
           <Switch
-            label="Title bar"
+            label={t("Title bar")}
             checked={frame.showChrome}
             onChange={(showChrome) => onFrameChange({ showChrome })}
           />
@@ -176,7 +178,7 @@ export function Sidebar({
             type="text"
             name="window-title"
             className="text-input"
-            aria-label="Title"
+            aria-label={t("Title")}
             // Matches the clamp in `sanitizeFrame`. Without it the clamp fires
             // on a real title, and the block a link opens is narrower than the
             // one that was shared — the chrome widens to fit the title.
@@ -189,7 +191,7 @@ export function Sidebar({
       </section>
 
       <section className="panel">
-        <h2 className="panel__title">Theme</h2>
+        <h2 className="panel__title">{t("Theme")}</h2>
         <div className="theme-grid">
           {THEMES.map((candidate) => (
             <button
@@ -218,15 +220,15 @@ export function Sidebar({
         decides which words are green in the first place.
       */}
       <section className="panel">
-        <h2 className="panel__title">Syntax</h2>
+        <h2 className="panel__title">{t("Syntax")}</h2>
         <select
           className="text-input select-input"
-          aria-label="Syntax highlighting"
+          aria-label={t("Syntax highlighting")}
           value={highlight}
           onChange={(event) => onHighlightChange(event.target.value as HighlightChoice)}
         >
           <option value="auto">
-            {detectedLanguage ? `Auto-detect (${languageLabel(detectedLanguage)})` : "Auto-detect"}
+            {detectedLanguage ? `${t("Auto-detect")} (${languageLabel(detectedLanguage)})` : t("Auto-detect")}
           </option>
           {/*
             Named for what it *is* rather than for what it turns off. This is
@@ -234,8 +236,8 @@ export function Sidebar({
             an author — calling the option "None" would invite someone to read
             it as "no colours" and clear a picture they were handed.
           */}
-          <option value="ansi">Custom (ANSI)</option>
-          <optgroup label="Language">
+          <option value="ansi">{t("Custom (ANSI)")}</option>
+          <optgroup label={t("Language")}>
             {HIGHLIGHT_LANGUAGES.map((language) => (
               <option key={language.id} value={language.id}>
                 {language.label}
@@ -246,14 +248,14 @@ export function Sidebar({
       </section>
 
       <section className="panel">
-        <h2 className="panel__title">Backdrop</h2>
+        <h2 className="panel__title">{t("Backdrop")}</h2>
         <div className="background-grid">
           {BACKGROUNDS.map((candidate) => (
             <button
               key={candidate.id}
               type="button"
-              title={candidate.name}
-              aria-label={candidate.name}
+              title={t(candidate.name)}
+              aria-label={t(candidate.name)}
               aria-pressed={background?.id === candidate.id}
               className={`background-swatch${background?.id === candidate.id ? " background-swatch--active" : ""}`}
               // Shown as it will actually render behind the current theme —
@@ -264,8 +266,8 @@ export function Sidebar({
           ))}
           <button
             type="button"
-            title="Transparent"
-            aria-label="Transparent"
+            title={t("Transparent")}
+            aria-label={t("Transparent")}
             aria-pressed={background === null}
             className={`background-swatch background-swatch--none${background === null ? " background-swatch--active" : ""}`}
             onClick={() => onBackgroundChange(TRANSPARENT_ID)}
@@ -278,7 +280,7 @@ export function Sidebar({
             recent colours and keyboard support for free.
           */}
           <label
-            title={fill ? `Fill ${fill}` : "Fill colour"}
+            title={fill ? t("Fill {fill}", { fill }) : t("Fill colour")}
             className={`background-swatch background-swatch--fill${fill ? " background-swatch--active" : ""}`}
             // Unpicked it stays the hue wheel the stylesheet gives it, which is
             // what says "any colour" rather than naming one.
@@ -288,7 +290,7 @@ export function Sidebar({
             <input
               type="color"
               className="background-swatch__picker"
-              aria-label="Fill colour"
+              aria-label={t("Fill colour")}
               value={fill ?? seed}
               // Clicking a swatch selects it, and this one is a swatch. The
               // input alone would not do that: it fires nothing until the colour
@@ -313,7 +315,7 @@ export function Sidebar({
           can still do: everything below sizes a block, and this decides whether
           the image is sized by that block or fixed from the outside.
         */}
-        <Field label="Aspect ratio" hint={aspect ? `${aspect.width} × ${aspect.height}` : "fits the content"}>
+        <Field label={t("Aspect ratio")} hint={aspect ? `${aspect.width} × ${aspect.height}` : t("fits the content")}>
           <div className="aspect-row">
             {[null, ...ASPECT_PRESETS].map((candidate) => (
               <button
@@ -325,39 +327,39 @@ export function Sidebar({
                 aria-pressed={candidate?.id === frame.aspect}
                 onClick={() => onFrameChange({ aspect: candidate?.id ?? null })}
               >
-                {candidate?.label ?? "Free"}
+                {candidate?.label ?? t("Free")}
               </button>
             ))}
           </div>
         </Field>
         <Slider
-          label="Width"
+          label={t("Width")}
           value={frame.columns}
           min={MIN_COLUMNS}
           max={MAX_COLUMNS}
-          suffix=" cols"
+          suffix={language === "zh-CN" ? " 列" : " cols"}
           onChange={(columns) => onFrameChange({ columns })}
         />
         <Slider
-          label="Corner radius"
+          label={t("Corner radius")}
           value={frame.radius}
           min={0}
           max={28}
           onChange={(radius) => onFrameChange({ radius })}
         />
         <Slider
-          label="Padding"
+          label={t("Padding")}
           value={frame.framePadding}
           min={0}
           max={140}
           // A fixed canvas leaves whatever it leaves around the block, so there
           // is nothing here to set. Width stays live and does the job people
           // reach for this slider to do: fewer columns is a bigger block.
-          lockedHint={aspect ? "set by the aspect" : undefined}
+          lockedHint={aspect ? t("set by the aspect") : undefined}
           onChange={(framePadding) => onFrameChange({ framePadding })}
         />
         <Slider
-          label="Shadow"
+          label={t("Shadow")}
           value={frame.shadowStrength}
           min={0}
           max={100}
